@@ -36,7 +36,7 @@ void inicializarMochilaVetor(Mochila_Vetor* mochila);
 int inserirItemVetor(Mochila_Vetor* mochila, Item novo);
 int removerItemVetor(Mochila_Vetor* mochila, const char* nome);
 void buscarSequencialVetor(const Mochila_Vetor* mochila, const char* nome);
-void ordenarVetorNome(Mochila_Vetor*mochila);
+void ordenarVetorPorNome(Mochila_Vetor*mochila);
 void buscarBinariaVetor(const Mochila_Vetor* mochila, const char* nome);
 void listarItensVetor(const Mochila_Vetor* mochila);
 //funções para encadeada
@@ -311,7 +311,7 @@ void buscarBinariaVetor(const Mochila_Vetor* mochila, const char* nome) {
         int res = strcmp(mochila->itens[meio].nome, nome);
 
         if (res == 0) {
-            printf("\nItem encontrado (Binária - Vetor):\n");
+            printf("\nItem encontrado na Mochila Vetor - Busca Binária:\n");
             printf("Nome: %s | Tipo: %s | Qtd: %d\n", mochila->itens[meio].nome, mochila->itens[meio].tipo, mochila->itens[meio].quantidade);
             printf("Número de comparações: %d\n", comparacoes);
             return;
