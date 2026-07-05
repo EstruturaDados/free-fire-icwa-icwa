@@ -280,6 +280,9 @@ void buscarSequencialVetor(const Mochila_Vetor* mochila, const char* nome) {
     printf("Número de comparações: %d\n", comparacoes);
     printf("Erro: Item não encontrado na Mochila Vetor!\n");
 }
+// a troca é feita por meio de uma variável temporária do tipo Item, que armazena o item atual antes de ser substituído pelo item mínimo encontrado na iteração.
+// a cada rodada do loop externo, o item mínimo é colocado na posição correta do vetor, garantindo que os itens sejam ordenados por nome.
+// o número de rodadas do loop externo é igual ao número de itens na mochila menos um, e o loop interno percorre os itens restantes para encontrar o item mínimo.
 void ordenarVetorPorNome(Mochila_Vetor* mochila) {
     // implementação do algoritmo de ordenação Selection Sort para ordenar os itens da mochila por nome
     for (int i = 0; i < mochila->quantidadeItens - 1; i++) {
@@ -332,4 +335,87 @@ void listarItensVetor(const Mochila_Vetor* mochila) {
     for (int i = 0; i < mochila->quantidadeItens; i++) {
         printf("%-4d|%-20s|%-20s|%d\n", i + 1, mochila->itens[i].nome, mochila->itens[i].tipo, mochila->itens[i].quantidade);
     }
+}
+// IMPLEMENTAÇÃO FUNÇÃO - ENCADEADA
+void inicializarMochilaEncadeada(Mochila_Encadeada* mochila) {
+    mochila->inicio = NULL;
+}
+int inserirItemEncadeada(Mochila_Encadeada* mochila, Item novo) {
+    No* novoNo = (No*)malloc(sizeof(No));
+    if (novoNo == NULL) {
+        return 0; // falha na alocação de memória
+    }
+    //copia os dados do item para o novo nó
+    novoNo->dados = novo;
+    // insere o novo nó no início da lista encadeada
+    novoNo->proximo = mochila->inicio;
+    mochila->inicio = novoNo;// atualiza o início da lista para o novo nó
+    return 1; // inserido com sucesso
+}
+int removerItemEncadeada(Mochila_Encadeada* mochila, const char* nome) {
+    No* atual = mochila->inicio;
+    No* anterior = NULL;
+
+    while (atual != NULL) {
+        if (strcmp(atual->dados.nome, nome) == 0) {
+            if (anterior == NULL) {
+                // removendo o primeiro nó
+                mochila->inicio = atual->proximo;
+            } else {
+                // removendo um nó do meio ou final
+                anterior->proximo = atual->proximo;
+            }
+            free(atual);
+            return 1; // removido com sucesso
+        }
+        anterior = atual;
+        atual = atual->proximo;
+    }
+    return 0; // item não encontrado
+}
+void listarItensEncadeada(const Mochila_Encadeada* mochila) {
+    printf("\n================= Itens na Mochila Encadeada ==================\n");
+    printf("\n%-4s  | %-20s | %-20s | %s\n", "Nº", "NOME", "TIPO", "QUANTIDADE");
+    printf("---------------------------------------------------------------\n");
+
+    int contador = 0; 
+    No* atual = mochila->inicio; 
+    
+    while (atual != NULL) {
+        contador++; 
+        printf("%-4d | %-20s | %-20s | %d\n",
+            contador, 
+            atual->dados.nome, 
+            atual->dados.tipo, 
+            atual->dados.quantidade);
+
+        atual = atual->proximo;
+    }
+    
+    // Exibe o resumo do espaço utilizado no rodapé da tabela
+    printf("---------------------------------------------------------------\n");
+    printf("Espaço utilizado na mochila: %d de 10.\n", contador);
+}
+// busca sequencial apenas para a lista encadeada, pois a busca binária não é recomendada para a lista encadeada, pois ela não é ordenada e não tem acesso direto aos elementos
+void buscarSequencialEncadeada(const Mochila_Encadeada* mochila, const char* nome) {
+    No* atual = mochila->inicio;
+    while (atual != NULL) {
+        if (strcmp(atual->dados.nome, nome) == 0) {
+            printf("\nItem encontrado na Mochila Encadeada:\n");
+            printf("Nome: %s | Tipo: %s | Quantidade: %d\n", atual->dados.nome, atual->dados.tipo, atual->dados.quantidade);
+            return;
+        }
+        atual = atual->proximo;
+    }
+    printf("Erro: Item não encontrado na Mochila Encadeada!\n");
+}
+void limparMochilaEncadeada(Mochila_Encadeada* mochila) {
+    No* atual = mochila->inicio;
+    No* proximo;
+    while (atual != NULL) {
+        proximo = atual->proximo;
+        free(atual);
+        atual = proximo;
+    }
+    mochila->inicio = NULL;
 }
