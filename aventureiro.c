@@ -240,3 +240,96 @@ int main() {
 
 return 0;
 }
+// IMPLEMENTAÇÃO FUNÇÃO - VETOR
+
+void inicializarMochilaVetor(Mochila_Vetor* mochila) {
+    mochila->quantidadeItens = 0;
+}
+int inserirItemVetor(Mochila_Vetor* mochila, Item novo) {
+    if (mochila->quantidadeItens >= MAX_VETOR) {
+        return 0; // vetor cheio
+    }
+    mochila->itens[mochila->quantidadeItens] = novo;
+    mochila->quantidadeItens++;
+    return 1; // inserido com sucesso
+}
+int removerItemVetor(Mochila_Vetor* mochila, const char* nome) {
+    for (int i = 0; i < mochila->quantidadeItens; i++) {
+        if (strcmp(mochila->itens[i].nome, nome) == 0) {
+            // desloca os itens restantes para preencher o espaço do item removido
+            for (int j = i; j < mochila->quantidadeItens - 1; j++) {
+                mochila->itens[j] = mochila->itens[j + 1];
+            }
+            mochila->quantidadeItens--;
+            return 1; // removido com sucesso
+        }
+    }
+    return 0; // item não encontrado
+}
+void buscarSequencialVetor(const Mochila_Vetor* mochila, const char* nome) {
+    int comparacoes = 0;
+    for (int i = 0; i < mochila->quantidadeItens; i++) {
+        comparacoes++;
+        if (strcmp(mochila->itens[i].nome, nome) == 0) {
+            printf("\nItem encontrado (Sequencial - Vetor):\n");
+            printf("Nome: %s | Tipo: %s | Qtd: %d\n", mochila->itens[i].nome, mochila->itens[i].tipo, mochila->itens[i].quantidade);
+            printf("Número de comparações: %d\n", comparacoes);
+            return;
+        }
+    }
+    printf("Número de comparações: %d\n", comparacoes);
+    printf("Erro: Item não encontrado na Mochila Vetor!\n");
+}
+void ordenarVetorPorNome(Mochila_Vetor* mochila) {
+    // implementação do algoritmo de ordenação Selection Sort para ordenar os itens da mochila por nome
+    for (int i = 0; i < mochila->quantidadeItens - 1; i++) {
+        int min_indice = i;
+        for (int j = i + 1; j < mochila->quantidadeItens; j++) {
+            if (strcmp(mochila->itens[j].nome, mochila->itens[min_indice].nome) < 0) {
+                min_indice = j;
+            }
+        }
+        if (min_indice != i) {
+            Item temp = mochila->itens[i];
+            mochila->itens[i] = mochila->itens[min_indice];
+            mochila->itens[min_indice] = temp;
+        }
+    }
+}
+// essa função de busca binária só funciona para a mochila do tipo vetor, pois a lista encadeada não tem ordenação e não tem acesso direto aos elementos
+void buscarBinariaVetor(const Mochila_Vetor* mochila, const char* nome) {
+    int comparacoes = 0;
+    int inicio = 0;
+    int fim = mochila->quantidadeItens - 1;
+
+    while (inicio <= fim) {
+        comparacoes++;
+        int meio = inicio + (fim - inicio) / 2;
+        int res = strcmp(mochila->itens[meio].nome, nome);
+
+        if (res == 0) {
+            printf("\nItem encontrado (Binária - Vetor):\n");
+            printf("Nome: %s | Tipo: %s | Qtd: %d\n", mochila->itens[meio].nome, mochila->itens[meio].tipo, mochila->itens[meio].quantidade);
+            printf("Número de comparações: %d\n", comparacoes);
+            return;
+        } else if (res < 0) {
+            inicio = meio + 1;
+        } else {
+            fim = meio - 1;
+        }
+    }
+    printf("Número de comparações: %d\n", comparacoes);
+    printf("Erro: Item não encontrado na Mochila Vetor!\n");
+}
+void listarItensVetor(const Mochila_Vetor* mochila) {
+    if (mochila->quantidadeItens == 0) {
+        printf("A Mochila Vetor está vazia!\n");
+        return;
+    }
+    printf("\n============= Itens na Mochila Vetor (%d/10) =============\n", mochila->quantidadeItens);
+    printf("\n%-4s |%-20s|%-20s|%s\n", "Nº", "NOME", "TIPO", "QUANTIDADE");
+    printf("---------------------------------------------------------\n");
+    for (int i = 0; i < mochila->quantidadeItens; i++) {
+        printf("%-4d|%-20s|%-20s|%d\n", i + 1, mochila->itens[i].nome, mochila->itens[i].tipo, mochila->itens[i].quantidade);
+    }
+}
